@@ -500,14 +500,14 @@
           // Your EmailJS template uses {{email}} and {{name}} (per screenshot)
           // so we pass email/name, plus to_name/from_name for your HTML body.
           await emailjs.send(EMAILJS_SERVICE_ID, TEMPLATE_TO_HER, {
-            email: HER_EMAIL,
+            to_email: HER_EMAIL,
             name: FROM_NAME,
             to_name: TO_NAME,
             from_name: FROM_NAME
           });
 
           await emailjs.send(EMAILJS_SERVICE_ID, TEMPLATE_TO_ME, {
-            email: YOUR_EMAIL,
+            to_email: YOUR_EMAIL,
             name: FROM_NAME,
             from_name: FROM_NAME
           });
