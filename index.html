@@ -1,0 +1,600 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>My Dear Rmita 💌</title>
+
+  <style>
+    :root{
+      --pink:#ff4d7d;
+      --soft:#fff5f8;
+      --text:#2b2b2b;
+      --green:#22c55e;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:#fff;
+      color:var(--text);
+      min-height:100vh;
+      overflow:hidden;
+    }
+    .bg{
+      position:fixed; inset:0; pointer-events:none; opacity:.16;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(255,77,125,.22) 0 18px, transparent 19px),
+        radial-gradient(circle at 70% 30%, rgba(255,134,168,.22) 0 16px, transparent 17px),
+        radial-gradient(circle at 30% 70%, rgba(255,77,125,.18) 0 20px, transparent 21px),
+        radial-gradient(circle at 85% 80%, rgba(255,134,168,.18) 0 22px, transparent 23px);
+    }
+
+    .wrap{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+    }
+    .card{
+      width:min(820px, 94vw);
+      background:rgba(255,255,255,.90);
+      border:1px solid rgba(255,77,125,.18);
+      border-radius:22px;
+      box-shadow:0 12px 40px rgba(0,0,0,.08);
+      padding: clamp(18px, 3.2vw, 34px) clamp(14px, 3vw, 26px);
+      position:relative;
+      overflow:hidden;
+    }
+    h1{
+      margin: 6px 0 0;
+      text-align:center;
+      font-weight: 950;
+      font-size: clamp(26px, 4.2vw, 44px);
+      letter-spacing:-0.02em;
+    }
+    .sub{
+      margin: 10px 0 0;
+      text-align:center;
+      color: rgba(43,43,43,.72);
+      font-size: clamp(13px, 2.2vw, 15px);
+      line-height:1.55;
+    }
+
+    .playground{
+      margin-top: 18px;
+      position:relative;
+      height: clamp(360px, 48vh, 460px);
+      border-radius: 18px;
+      border: 1px dashed rgba(255,77,125,.30);
+      background: linear-gradient(180deg, rgba(255,245,248,.92), rgba(255,255,255,.92));
+      overflow:hidden;
+    }
+
+    .btnRow{
+      position:absolute;
+      left:50%;
+      top: 44%;
+      transform: translate(-50%, -50%);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap: 16px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.55);
+      border: 1px solid rgba(255,77,125,.12);
+      z-index: 2;
+      max-width: 92%;
+    }
+
+    button{
+      appearance:none; border:none;
+      padding: 12px 18px;
+      border-radius: 999px;
+      font-weight: 850;
+      cursor: pointer;
+      transition: transform .10s ease, box-shadow .10s ease, filter .10s ease, width .12s ease;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
+      white-space: nowrap;
+      max-width: 44vw;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+
+    #yesBtn{
+      background: var(--green);
+      color:white;
+      box-shadow: 0 10px 22px rgba(34,197,94,.25);
+    }
+    #yesBtn:hover{ transform: translateY(-1px); filter: brightness(1.03); }
+    #yesBtn:active{ transform: translateY(0px) scale(.99); }
+
+    #noBtn{
+      background: white;
+      color: var(--pink);
+      border: 2px solid rgba(255,77,125,.55);
+      box-shadow: 0 10px 22px rgba(0,0,0,.06);
+      position: absolute;
+      will-change: left, top;
+      z-index: 3;
+    }
+
+    .overlay{
+      position:absolute; inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background: rgba(255,255,255,.86);
+      backdrop-filter: blur(4px);
+      padding: 16px;
+      text-align:center;
+      z-index: 10;
+    }
+    .overlay.show{ display:flex; }
+
+    .bubble{
+      max-width: 720px;
+      width:min(720px, 92%);
+      background: white;
+      border: 1px solid rgba(255,77,125,.25);
+      border-radius: 18px;
+      padding: 16px 16px;
+      box-shadow: 0 12px 34px rgba(0,0,0,.10);
+    }
+    .bubble .title{
+      font-size: clamp(16px, 2.8vw, 20px);
+      font-weight: 950;
+      margin: 10px 0 10px;
+    }
+    .bubble img{
+      width: min(420px, 88%);
+      height:auto;
+      border-radius: 16px;
+      border:1px solid rgba(0,0,0,.08);
+      box-shadow: 0 10px 24px rgba(0,0,0,.10);
+      display:block;
+      margin: 0 auto;
+    }
+    .bubble .txt{
+      font-size: clamp(13px, 2.2vw, 14px);
+      color: rgba(43,43,43,.70);
+      margin: 10px 0 0;
+      line-height: 1.6;
+      white-space: pre-line;
+    }
+
+    .locked{
+      position: fixed;
+      inset:0;
+      background: rgba(255,255,255,.20);
+      backdrop-filter: blur(8px);
+      z-index: 999;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding: 18px;
+      pointer-events: all;
+    }
+    .locked.show{ display:flex; }
+
+    .lockedCard{
+      width:min(720px, 92vw);
+      background: white;
+      border-radius: 18px;
+      border: 1px solid rgba(255,77,125,.25);
+      box-shadow: 0 16px 44px rgba(0,0,0,.14);
+      padding: 18px 16px;
+      text-align:center;
+    }
+    .lockedCard .big{
+      font-size: clamp(16px, 2.8vw, 20px);
+      font-weight: 950;
+      margin: 0;
+      color: rgba(43,43,43,.92);
+      line-height:1.6;
+    }
+
+    .successOverlay .bubble{
+      border-color: rgba(34,197,94,.25);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg" aria-hidden="true"></div>
+
+  <div class="wrap">
+    <div class="card">
+      <h1 id="mainTitle">Will you be my valentine?</h1>
+      <p class="sub" id="subText">Choose… carefully 💗</p>
+
+      <div class="playground" id="playground">
+        <div class="btnRow" id="btnRow">
+          <button id="yesBtn">Yes</button>
+        </div>
+
+        <button id="noBtn" aria-label="No">No</button>
+
+        <!-- 3-min tease overlay -->
+        <div class="overlay" id="teaseOverlay">
+          <div class="bubble">
+            <div class="title">Are you messing with me?</div>
+            <p class="txt">That “No” button is getting a bit too much attention…</p>
+          </div>
+        </div>
+
+        <!-- One-time cat slide (30 sec) -->
+        <div class="overlay" id="catOverlay">
+          <div class="bubble">
+            <img id="catImg" src="cat.jpg" alt="cat" />
+            <p class="txt">One more chance. Choose wisely.</p>
+          </div>
+        </div>
+
+        <!-- YES success overlay -->
+        <div class="overlay successOverlay" id="yesOverlay">
+          <div class="bubble">
+            <img id="coupleImg" src="couple.JPG" alt="us" />
+            <div class="title">WOOOOOO!!! I love you Rmita. I knew you made the right choice!! ;))</div>
+            <p class="txt">Thank you for accepting my invitation. Now check your email.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Final lock banner -->
+  <div class="locked" id="lockOverlay">
+    <div class="lockedCard">
+      <p class="big">Okay! I lost my chance to have you for Valentine this year… maybe next time :)</p>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+  <script>
+    (function(){
+      // =========================
+      // EmailJS config (fill yourself)
+      // =========================
+      const EMAILJS_PUBLIC_KEY = "puskkhiFZlBe-anFc";
+      const EMAILJS_SERVICE_ID = "service_w9h5acb";
+      const TEMPLATE_TO_HER    = "template_qk3ipof";
+      const TEMPLATE_TO_ME     = "template_m899013";
+      const YOUR_EMAIL = "tabatabaei.mosi@gmail.com";
+      const HER_EMAIL  = "mosi.tabaei70@gmail.com";
+
+      // Names requested
+      const FROM_NAME = "Mostafa";
+      const TO_NAME   = "Rmita";
+
+      // =========================
+      // UI
+      // =========================
+      const playground = document.getElementById('playground');
+      const yesBtn = document.getElementById('yesBtn');
+      const noBtn = document.getElementById('noBtn');
+      const teaseOverlay = document.getElementById('teaseOverlay');
+      const catOverlay = document.getElementById('catOverlay');
+      const yesOverlay = document.getElementById('yesOverlay');
+      const lockOverlay = document.getElementById('lockOverlay');
+      const mainTitle = document.getElementById('mainTitle');
+      const subText = document.getElementById('subText');
+
+      // =========================
+      // NO LINES
+      // =========================
+      const noLines = [
+        "are you sure?",
+        "what if I ask really nicely?",
+        "with a very delcious chocolate on top?",
+        "what a about pizza? from ROBEN",
+        "PLEASE HONEY, I KNOW YOU",
+        "But :(",
+        "I am going to die :)",
+        "I am dead :) are you happy now?",
+        "still trying to talk with a ghost",
+        "Do you think you are genius? Click YES",
+        "Sounds you are sure about it :(",
+        "Can't do anything?",
+        "No :("
+      ];
+      let noLineIndex = 0;
+      let noClickCount = 0;
+      let catShownOnce = false;
+
+      // =========================
+      // BEHAVIOR CONFIG
+      // =========================
+      const NO_ESCAPE_PADDING = 16;
+      const NO_MOVE_DISTANCE = 280;
+      const PROXIMITY_TRIGGER = 180;
+      const COOLDOWN_MS = 110;
+
+      const TEASE_AFTER_MS = 3 * 60 * 1000;
+      const TEASE_SHOW_MS = 2300;
+
+      const CAT_SHOW_MS = 10 * 1000; // 30 seconds
+
+      const SAFE_GAP = 18;
+
+      let yesChosen = false;
+      let teaseTimer = null;
+      let cooldown = false;
+
+      function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
+
+      function setNoTextAndSize(text){
+        noBtn.textContent = text;
+        const len = text.length;
+        const minW = 78;
+        const maxW = 420;
+        const calcW = clamp(12 * len + 36, minW, maxW);
+        noBtn.style.width = calcW + "px";
+        const fs = clamp(16 - Math.floor(len / 18), 12, 16);
+        noBtn.style.fontSize = fs + "px";
+      }
+
+      function anchorNoNextToYes(){
+        const pg = playground.getBoundingClientRect();
+        const yb = yesBtn.getBoundingClientRect();
+
+        const desiredLeft = (yb.left - pg.left) + yb.width + SAFE_GAP;
+        const desiredTop  = (yb.top  - pg.top);
+
+        const btnW = noBtn.offsetWidth;
+        const btnH = noBtn.offsetHeight;
+
+        let left = desiredLeft;
+        let top  = desiredTop;
+
+        if (left + btnW + NO_ESCAPE_PADDING > pg.width) {
+          left = (yb.left - pg.left) - SAFE_GAP - btnW;
+        }
+
+        left = clamp(left, NO_ESCAPE_PADDING, pg.width - btnW - NO_ESCAPE_PADDING);
+        top  = clamp(top,  NO_ESCAPE_PADDING, pg.height - btnH - NO_ESCAPE_PADDING);
+
+        noBtn.style.left = `${left}px`;
+        noBtn.style.top  = `${top}px`;
+      }
+
+      function startTeaseTimer(){
+        if (teaseTimer) return;
+        teaseTimer = setTimeout(()=>{
+          if (yesChosen) return;
+          teaseOverlay.classList.add('show');
+          setTimeout(()=>{
+            teaseOverlay.classList.remove('show');
+            teaseTimer = null;
+            anchorNoNextToYes();
+          }, TEASE_SHOW_MS);
+        }, TEASE_AFTER_MS);
+      }
+
+      function isTooCloseToYes(candidateLeft, candidateTop){
+        const pg = playground.getBoundingClientRect();
+        const yb = yesBtn.getBoundingClientRect();
+        const nbW = noBtn.offsetWidth;
+        const nbH = noBtn.offsetHeight;
+
+        const yesRect = {
+          left: yb.left - pg.left,
+          top:  yb.top  - pg.top,
+          right:(yb.left - pg.left) + yb.width,
+          bottom:(yb.top - pg.top) + yb.height
+        };
+
+        const noRect = {
+          left: candidateLeft,
+          top: candidateTop,
+          right: candidateLeft + nbW,
+          bottom: candidateTop + nbH
+        };
+
+        const safeYes = {
+          left: yesRect.left - SAFE_GAP,
+          top: yesRect.top - SAFE_GAP,
+          right: yesRect.right + SAFE_GAP,
+          bottom: yesRect.bottom + SAFE_GAP
+        };
+
+        return !(
+          noRect.right < safeYes.left ||
+          noRect.left > safeYes.right ||
+          noRect.bottom < safeYes.top ||
+          noRect.top > safeYes.bottom
+        );
+      }
+
+      function dodge(pointerX, pointerY){
+        if (yesChosen) return;
+        if (cooldown) return;
+
+        cooldown = true;
+        setTimeout(()=> cooldown = false, COOLDOWN_MS);
+
+        const pg = playground.getBoundingClientRect();
+        const btn = noBtn.getBoundingClientRect();
+
+        const w = pg.width, h = pg.height;
+
+        const px = pointerX - pg.left;
+        const py = pointerY - pg.top;
+
+        const bx = (btn.left - pg.left) + btn.width/2;
+        const by = (btn.top  - pg.top ) + btn.height/2;
+
+        let vx = bx - px;
+        let vy = by - py;
+
+        if (Math.abs(vx) < 1 && Math.abs(vy) < 1){
+          vx = (Math.random() - 0.5);
+          vy = (Math.random() - 0.5);
+        }
+
+        const len = Math.hypot(vx, vy) || 1;
+        vx /= len; vy /= len;
+
+        const jitter = 0.35;
+        vx = vx*(1-jitter) + (Math.random()-0.5)*jitter;
+        vy = vy*(1-jitter) + (Math.random()-0.5)*jitter;
+
+        let targetX = (btn.left - pg.left) + vx * NO_MOVE_DISTANCE;
+        let targetY = (btn.top  - pg.top ) + vy * NO_MOVE_DISTANCE;
+
+        targetX = clamp(targetX, NO_ESCAPE_PADDING, w - btn.width - NO_ESCAPE_PADDING);
+        targetY = clamp(targetY, NO_ESCAPE_PADDING, h - btn.height - NO_ESCAPE_PADDING);
+
+        if (isTooCloseToYes(targetX, targetY)) {
+          for (let i=0; i<12; i++){
+            const rx = clamp(Math.random() * (w - btn.width), NO_ESCAPE_PADDING, w - btn.width - NO_ESCAPE_PADDING);
+            const ry = clamp(Math.random() * (h - btn.height), NO_ESCAPE_PADDING, h - btn.height - NO_ESCAPE_PADDING);
+            if (!isTooCloseToYes(rx, ry)) { targetX = rx; targetY = ry; break; }
+          }
+        }
+
+        noBtn.style.left = `${targetX}px`;
+        noBtn.style.top  = `${targetY}px`;
+      }
+
+      function showCatOnce30s(){
+        if (catShownOnce) return;
+        catShownOnce = true;
+
+        const oldTitle = mainTitle.textContent;
+        const oldSub = subText.textContent;
+
+        mainTitle.textContent = "Are you messing with me?";
+        subText.textContent = "I give you only one other chance!";
+
+        catOverlay.classList.add('show');
+
+        setTimeout(()=>{
+          catOverlay.classList.remove('show');
+          mainTitle.textContent = oldTitle;
+          subText.textContent = oldSub;
+          anchorNoNextToYes();
+        }, CAT_SHOW_MS);
+      }
+
+      function lockOutForever(){
+        lockOverlay.classList.add('show');
+        yesBtn.disabled = true;
+        noBtn.disabled = true;
+        yesBtn.style.pointerEvents = "none";
+        noBtn.style.pointerEvents = "none";
+        playground.style.pointerEvents = "none";
+      }
+
+      async function sendEmails(){
+        if (!EMAILJS_PUBLIC_KEY || !EMAILJS_SERVICE_ID || !TEMPLATE_TO_HER || !TEMPLATE_TO_ME) return;
+
+        try{
+          emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+
+          // IMPORTANT:
+          // Your EmailJS template uses {{email}} and {{name}} (per screenshot)
+          // so we pass email/name, plus to_name/from_name for your HTML body.
+          await emailjs.send(EMAILJS_SERVICE_ID, TEMPLATE_TO_HER, {
+            email: HER_EMAIL,
+            name: FROM_NAME,
+            to_name: TO_NAME,
+            from_name: FROM_NAME
+          });
+
+          await emailjs.send(EMAILJS_SERVICE_ID, TEMPLATE_TO_ME, {
+            email: YOUR_EMAIL,
+            name: FROM_NAME,
+            from_name: FROM_NAME
+          });
+        } catch (err){
+          console.error(err);
+        }
+      }
+
+      function finishYes(){
+        if (yesChosen) return;
+        yesChosen = true;
+
+        if (teaseTimer) { clearTimeout(teaseTimer); teaseTimer = null; }
+
+        yesBtn.style.pointerEvents = "none";
+        noBtn.style.pointerEvents = "none";
+        noBtn.style.opacity = "0.15";
+
+        yesOverlay.classList.add('show');
+        sendEmails();
+      }
+
+      // EVENTS
+      window.addEventListener('resize', () => {
+        if (!yesChosen && !lockOverlay.classList.contains('show')) anchorNoNextToYes();
+      });
+
+      noBtn.addEventListener('pointerenter', (e)=>{
+        startTeaseTimer();
+        dodge(e.clientX, e.clientY);
+      });
+
+      playground.addEventListener('mousemove', (e)=>{
+        if (yesChosen) return;
+        if (lockOverlay.classList.contains('show')) return;
+
+        const btn = noBtn.getBoundingClientRect();
+        const bx = btn.left + btn.width/2;
+        const by = btn.top  + btn.height/2;
+        const dist = Math.hypot(e.clientX - bx, e.clientY - by);
+
+        if (dist < PROXIMITY_TRIGGER){
+          startTeaseTimer();
+          dodge(e.clientX, e.clientY);
+        }
+      });
+
+      playground.addEventListener('touchmove', (e)=>{
+        if (yesChosen) return;
+        if (lockOverlay.classList.contains('show')) return;
+
+        const t = e.touches && e.touches[0];
+        if (!t) return;
+        startTeaseTimer();
+        dodge(t.clientX, t.clientY);
+      }, {passive:true});
+
+      noBtn.addEventListener('click', (e)=>{
+        e.preventDefault();
+        e.stopPropagation();
+        if (yesChosen) return;
+        if (lockOverlay.classList.contains('show')) return;
+
+        // exhausted -> lock
+        if (noLineIndex >= noLines.length) {
+          lockOutForever();
+          return;
+        }
+
+        const line = noLines[noLineIndex];
+        noLineIndex++;
+        setNoTextAndSize(line);
+
+        noClickCount++;
+        anchorNoNextToYes();
+
+        if (noClickCount === 2){
+          showCatOnce30s();
+        }
+      });
+
+      yesBtn.addEventListener('click', finishYes);
+
+      // Init
+      setNoTextAndSize("No");
+      requestAnimationFrame(anchorNoNextToYes);
+    })();
+  </script>
+</body>
+</html>
